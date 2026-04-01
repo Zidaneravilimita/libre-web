@@ -1,38 +1,94 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+/* Custom components */
+@layer components {
+  .event-card {
+    @apply bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-200 hover:-translate-y-1;
   }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+  
+  .event-image {
+    @apply relative h-48 overflow-hidden;
   }
-  to {
-    transform: rotate(360deg);
+  
+  .event-date {
+    @apply absolute top-4 left-4 bg-white rounded-lg p-2 text-center min-w-[50px] shadow-md;
+  }
+  
+  .date-day {
+    @apply block text-xl font-bold text-gray-800;
+  }
+  
+  .date-month {
+    @apply block text-xs text-gray-500 uppercase;
+  }
+  
+  .event-content {
+    @apply p-6;
+  }
+  
+  .event-category {
+    @apply inline-block bg-gray-100 text-primary-500 px-3 py-1 rounded-full text-sm font-medium mb-3;
+  }
+  
+  .event-title {
+    @apply text-xl font-bold mb-2 text-gray-800;
+  }
+  
+  .event-description {
+    @apply text-gray-500 mb-4 leading-relaxed;
+  }
+  
+  .event-details {
+    @apply flex flex-col gap-2 mb-4;
+  }
+  
+  .event-detail {
+    @apply flex items-center gap-2 text-gray-500 text-sm;
+  }
+  
+  .event-footer {
+    @apply flex justify-between items-center;
+  }
+  
+  .event-price {
+    @apply font-bold text-gray-800;
+  }
+  
+  .event-btn {
+    @apply bg-primary-500 text-white border-none px-4 py-2 rounded-md font-medium cursor-pointer transition-colors hover:bg-primary-600;
+  }
+  
+  .search-input-group {
+    @apply relative flex items-center;
+  }
+  
+  .search-icon {
+    @apply absolute left-4 text-gray-500 z-10;
+  }
+  
+  .search-input {
+    @apply w-full pl-10 pr-4 py-3 border-none rounded-lg text-base bg-white text-gray-800;
+  }
+  
+  .filter-btn {
+    @apply bg-white border border-gray-200 px-4 py-3 rounded-lg flex items-center gap-2 cursor-pointer transition-all hover:bg-gray-50 hover:border-primary-500;
+  }
+  
+  .view-toggle {
+    @apply flex border border-gray-200 rounded-lg overflow-hidden;
+  }
+  
+  .view-btn {
+    @apply bg-white border-none p-3 cursor-pointer transition-all;
+  }
+  
+  .view-btn.active {
+    @apply bg-primary-500 text-white;
+  }
+  
+  .social-link {
+    @apply flex items-center justify-center w-10 h-10 bg-gray-700 rounded-full text-white no-underline transition-colors hover:bg-primary-500;
+  }
+  
+  .contact-item {
+    @apply flex items-center gap-3 text-gray-400;
   }
 }
