@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Filter, Grid, List } from 'lucide-react';
 import EventCard from './EventCard';
+import { eventService } from '../services/eventService';
 
 const EventList = () => {
   const [events, setEvents] = useState([]);
@@ -8,9 +9,14 @@ const EventList = () => {
   const [viewMode, setViewMode] = useState('grid');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedCity, setSelectedCity] = useState('all');
+  const [dateFilter, setDateFilter] = useState('all');
   const [showFilters, setShowFilters] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [categories, setCategories] = useState([]);
+  const [cities, setCities] = useState([]);
 
-  // Données de démonstration
+  // Données de démonstration en fallback
   const mockEvents = [
     {
       id: 1,
@@ -44,66 +50,70 @@ const EventList = () => {
       price: 85,
       attendees: 24,
       image: "/api/placeholder/300/200"
-    },
-    {
-      id: 4,
-      title: "Exposition d'Art Contemporain",
-      description: "Une collection unique d'œuvres d'artistes émergents",
-      category: "Art",
-      date: "2024-07-22T10:00:00",
-      location: "Bordeaux, Galerie d'Art Moderne",
-      price: 12,
-      attendees: 150,
-      image: "/api/placeholder/300/200"
-    },
-    {
-      id: 5,
-      title: "Marathon Urbain de Paris",
-      description: "Courrez à travers les plus beaux quartiers de Paris",
-      category: "Sport",
-      date: "2024-08-05T08:00:00",
-      location: "Paris, Point de départ Tour Eiffel",
-      price: 35,
-      attendees: 3000,
-      image: "/api/placeholder/300/200"
-    },
-    {
-      id: 6,
-      title: "Soirée Stand-up Comedy",
-      description: "Les meilleurs humoristes français sur scène",
-      category: "Spectacle",
-      date: "2024-07-25T20:00:00",
-      location: "Lille, Théâtre Municipal",
-      price: 28,
-      attendees: 200,
-      image: "/api/placeholder/300/200"
     }
   ];
 
-  const categories = ['all', 'Musique', 'Technologie', 'Gastronomie', 'Art', 'Sport', 'Spectacle'];
-
+  // Charger les données depuis Supabase
   useEffect(() => {
-    setEvents(mockEvents);
-    setFilteredEvents(mockEvents);
-  }, [mockEvents]);
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        
+        // Charger les catégories et villes
+        const [categoriesData, citiesData] = await Promise.all([
+          eventService.fetchCategories(),
+          eventService.fetchVilles()
+        ]);
+        
+        setCategories(categoriesData);
+        setCities(citiesData);
+        
+        // Charger les événements
+        const eventsData = await eventService.fetchEvents();
+        const transformedEvents = eventService.transformEventData(eventsData);
+        setEvents(transformedEvents);
+        
+      } catch (error) {
+        console.error('Erreur lors du chargement des données:', error);
+        // Utiliser les données de démonstration en cas d'erreur
+        setEvents(mockEvents);
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    loadData();
+  }, []);
+
+  // Filtrer les événements
   useEffect(() => {
     let filtered = events;
 
-    if (selectedCategory !== 'all') {
-      filtered = filtered.filter(event => event.category === selectedCategory);
+    // Filtrer par ville
+    if (selectedCity && selectedCity !== 'all') {
+      filtered = filtered.filter(event => event.cityId === selectedCity);
     }
 
+    // Filtrer par catégorie
+    if (selectedCategory && selectedCategory !== 'all') {
+      filtered = filtered.filter(event => event.categoryId === selectedCategory);
+    }
+
+    // Filtrer par date
+    filtered = eventService.filterEventsByDate(filtered, dateFilter);
+
+    // Filtrer par terme de recherche
     if (searchTerm) {
       filtered = filtered.filter(event =>
         event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         event.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        event.location.toLowerCase().includes(searchTerm.toLowerCase())
+        event.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        event.category.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
     setFilteredEvents(filtered);
-  }, [searchTerm, selectedCategory, events]);
+  }, [events, selectedCity, selectedCategory, dateFilter, searchTerm]);
 
   return (
     <div className="event-list-container">
@@ -122,7 +132,7 @@ const EventList = () => {
           
           <div className="control-buttons">
             <button 
-              className="filter-btn"
+              className={`filter-btn ${showFilters ? 'active' : ''}`}
               onClick={() => setShowFilters(!showFilters)}
             >
               <Filter size={20} />
@@ -148,34 +158,84 @@ const EventList = () => {
       </div>
 
       {showFilters && (
-        <div className="filters-panel">
+        <div className="filters-panel animate-fadeInUp">
+          <div className="filter-group">
+            <label>Ville:</label>
+            <select
+              value={selectedCity}
+              onChange={(e) => setSelectedCity(e.target.value)}
+            >
+              <option value="all">Toutes les villes</option>
+              {cities.map(city => (
+                <option key={city.id_ville} value={city.id_ville}>
+                  {city.nom_ville}
+                </option>
+              ))}
+            </select>
+          </div>
+          
           <div className="filter-group">
             <label>Catégorie:</label>
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
             >
+              <option value="all">Toutes les catégories</option>
               {categories.map(category => (
-                <option key={category} value={category}>
-                  {category === 'all' ? 'Toutes les catégories' : category}
+                <option key={category.id_category} value={category.id_category}>
+                  {category.nom_category}
                 </option>
               ))}
+            </select>
+          </div>
+          
+          <div className="filter-group">
+            <label>Date:</label>
+            <select
+              value={dateFilter}
+              onChange={(e) => setDateFilter(e.target.value)}
+            >
+              <option value="all">Toutes les dates</option>
+              <option value="upcoming">À venir</option>
+              <option value="past">Passés</option>
             </select>
           </div>
         </div>
       )}
 
-      <div className={`events-container ${viewMode}`}>
-        {filteredEvents.length > 0 ? (
-          filteredEvents.map(event => (
-            <EventCard key={event.id} event={event} />
-          ))
-        ) : (
-          <div className="no-events">
-            <p>Aucun événement trouvé pour votre recherche.</p>
-          </div>
-        )}
-      </div>
+      {loading ? (
+        <div className="loading-container">
+          <div className="loading"></div>
+          <p>Chargement des événements...</p>
+        </div>
+      ) : (
+        <div className={`events-container ${viewMode}`}>
+          {filteredEvents.length > 0 ? (
+            filteredEvents.map((event, index) => (
+              <EventCard 
+                key={event.id} 
+                event={event} 
+                className={`animate-stagger-${(index % 4) + 1}`}
+              />
+            ))
+          ) : (
+            <div className="no-events">
+              <p>Aucun événement trouvé pour votre recherche.</p>
+              <button 
+                className="reset-filters-btn"
+                onClick={() => {
+                  setSearchTerm('');
+                  setSelectedCity('all');
+                  setSelectedCategory('all');
+                  setDateFilter('all');
+                }}
+              >
+                Réinitialiser les filtres
+              </button>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

@@ -2,9 +2,9 @@ import React from 'react';
 import { MapPin, Users, Clock } from 'lucide-react';
 import { format } from 'date-fns';
 
-const EventCard = ({ event }) => {
+const EventCard = ({ event, className = '' }) => {
   return (
-    <div className="event-card">
+    <div className={`event-card ${className}`}>
       <div className="event-image">
         <img src={event.image || '/api/placeholder/300/200'} alt={event.title} />
         <div className="event-date">
@@ -37,7 +37,12 @@ const EventCard = ({ event }) => {
           <span className="event-price">
             {event.price === 0 ? 'Gratuit' : `${event.price}€`}
           </span>
-          <button className="event-btn">Réserver</button>
+          <button 
+            className="event-btn"
+            onClick={() => console.log(`Réservation pour ${event.title}`)}
+          >
+            Réserver
+          </button>
         </div>
       </div>
     </div>
