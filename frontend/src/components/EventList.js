@@ -3,7 +3,7 @@ import { Filter, Grid, List } from 'lucide-react';
 import EventCard from './EventCard';
 import { eventService } from '../services/eventService';
 
-const EventList = () => {
+const EventList = ({ onReservation }) => {
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [viewMode, setViewMode] = useState('grid');
@@ -215,6 +215,7 @@ const EventList = () => {
               <EventCard 
                 key={event.id} 
                 event={event} 
+                onReservation={onReservation}
                 className={`animate-stagger-${(index % 4) + 1}`}
               />
             ))

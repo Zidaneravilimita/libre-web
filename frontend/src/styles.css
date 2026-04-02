@@ -178,7 +178,7 @@ body {
 .header-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 1rem 2rem;
+  padding: 0.75rem 2rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -334,7 +334,7 @@ body {
 .hero {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  padding: 4rem 2rem;
+  padding: 10rem 2rem;
   position: relative;
   overflow: hidden;
 }
@@ -356,6 +356,11 @@ body {
   text-align: center;
   position: relative;
   z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 35vh;
 }
 
 .hero-title {
@@ -2040,5 +2045,312 @@ body {
   .event-card {
     margin: 0 -1rem;
     border-radius: 0;
+  }
+}
+
+/* Styles pour la page de réservation */
+.reservation-page {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #ffffff;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  animation: slideInFromTop 0.3s ease-out;
+}
+
+.reservation-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #ffffff;
+}
+
+.reservation-header h2 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+  color: #1f2937;
+}
+
+.back-btn, .close-btn {
+  padding: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.back-btn:hover, .close-btn:hover {
+  background-color: #f3f4f6;
+}
+
+.reservation-body {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.event-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #1f2937;
+  line-height: 1.4;
+}
+
+.reservation-form {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background: #ffffff;
+  color: #1f2937;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-input::placeholder {
+  color: #9ca3af;
+}
+
+.wallet-selection {
+  margin-bottom: 16px;
+}
+
+.wallet-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #374151;
+}
+
+.wallet-row {
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+}
+
+.wallet-btn {
+  flex: 1;
+  border: 2px solid #d1d5db;
+  border-radius: 12px;
+  padding: 8px 12px;
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wallet-btn:hover {
+  background-color: #f9fafb;
+}
+
+.wallet-btn.active {
+  border-color: #ff7900;
+  background-color: #ffffff;
+}
+
+.wallet-btn.airtel-active {
+  border-color: #e62e2d;
+  background-color: #ffffff;
+}
+
+.wallet-btn.mvola-active {
+  border-color: #00a859;
+  background-color: #ffffff;
+}
+
+.wallet-icon {
+  width: 56px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 12px;
+  border-radius: 4px;
+}
+
+.wallet-logo {
+  width: 80px;
+  height: 40px;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.airtel-logo {
+  width: 90px;
+  height: 45px;
+}
+
+.orange-icon {
+  background: linear-gradient(135deg, #ff7900, #ff6200);
+  color: white;
+}
+
+.mvola-icon {
+  background: linear-gradient(135deg, #00a859, #00d466);
+  color: white;
+}
+
+.airtel-icon {
+  background: linear-gradient(135deg, #e62e2d, #ff4444);
+  color: white;
+}
+
+.submit-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 12px;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background: #2563eb;
+}
+
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.secondary-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 24px;
+  background: transparent;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 10px;
+}
+
+.secondary-btn:hover {
+  background-color: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.success-message {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+}
+
+.success-icon {
+  color: #10b981;
+  margin-bottom: 10px;
+}
+
+.success-message h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 10px 0;
+  color: #1f2937;
+}
+
+.success-message p {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 6px 0 16px;
+  line-height: 1.5;
+}
+
+/* Responsive pour la réservation */
+@media (max-width: 768px) {
+  .reservation-body {
+    padding: 16px;
+  }
+  
+  .reservation-form {
+    padding: 16px;
+  }
+  
+  .wallet-row {
+    gap: 6px;
+  }
+  
+  .wallet-icon {
+    width: 48px;
+    height: 28px;
+    font-size: 10px;
+  }
+  
+  .wallet-logo {
+    width: 70px;
+    height: 35px;
+  }
+  
+  .airtel-logo {
+    width: 80px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .reservation-header {
+    padding: 12px 16px;
+  }
+  
+  .reservation-body {
+    padding: 12px;
+  }
+  
+  .reservation-form {
+    padding: 12px;
+  }
+  
+  .form-input {
+    padding: 10px;
+    font-size: 16px; /* Empêche le zoom sur iOS */
   }
 }

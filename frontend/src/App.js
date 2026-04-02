@@ -6,10 +6,13 @@ import Footer from './components/Footer';
 import AuthPage from './pages/AuthPage';
 import DashboardVisitor from './pages/DashboardVisitor';
 import DashboardOrganizer from './pages/DashboardOrganizer';
+import ReservationPage from './pages/ReservationPage';
 import './styles.css';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
+  const [showReservation, setShowReservation] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   useEffect(() => {
     // Déterminer la page actuelle basée sur l'URL
@@ -42,6 +45,21 @@ function App() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
+  const handleReservation = (event) => {
+    setSelectedEvent(event);
+    setShowReservation(true);
+  };
+
+  const handleCloseReservation = () => {
+    setShowReservation(false);
+    setSelectedEvent(null);
+  };
+
+  const handleBackReservation = () => {
+    setShowReservation(false);
+    setSelectedEvent(null);
+  };
+
   const renderPage = () => {
     switch (currentPage) {
       case 'auth':
@@ -56,7 +74,7 @@ function App() {
             <Header />
             <main>
               <Hero />
-              <EventList />
+              <EventList onReservation={handleReservation} />
             </main>
             <Footer />
           </div>
@@ -67,6 +85,13 @@ function App() {
   return (
     <div className="app-container">
       {renderPage()}
+      {showReservation && (
+        <ReservationPage
+          event={selectedEvent}
+          onClose={handleCloseReservation}
+          onBack={handleBackReservation}
+        />
+      )}
     </div>
   );
 }

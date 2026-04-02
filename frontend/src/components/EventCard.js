@@ -2,7 +2,7 @@ import React from 'react';
 import { MapPin, Users, Clock } from 'lucide-react';
 import { format } from 'date-fns';
 
-const EventCard = ({ event, className = '' }) => {
+const EventCard = ({ event, className = '', onReservation }) => {
   return (
     <div className={`event-card ${className}`}>
       <div className="event-image">
@@ -39,7 +39,7 @@ const EventCard = ({ event, className = '' }) => {
           </span>
           <button 
             className="event-btn"
-            onClick={() => console.log(`Réservation pour ${event.title}`)}
+            onClick={() => onReservation && onReservation(event)}
           >
             Réserver
           </button>
