@@ -1,3 +1,6 @@
+/* Import des styles de localisation */
+@import url('./styles/location.css');
+
 /* Animations globales */
 @keyframes fadeInUp {
   from {
