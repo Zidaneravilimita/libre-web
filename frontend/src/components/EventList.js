@@ -49,43 +49,40 @@ const EventList = () => {
       location: "Marseille, École de Cuisine",
       price: 85,
       attendees: 24,
+      image: "/api/placeholder/300/200"
     }
   ];
 
   // Charger les données depuis Supabase
   useEffect(() => {
-    const loadInitialData = async () => {
-      setLoading(true);
+    const loadData = async () => {
       try {
-        // Détecter la position de l'utilisateur
-        await eventService.detectUserLocation();
+        setLoading(true);
         
-        // Charger les données depuis Supabase
-        const [eventsData, citiesData, categoriesData] = await Promise.all([
-          eventService.getEvents(),
-          eventService.getCities(),
-          eventService.getCategories()
+        // Charger les catégories et villes
+        const [categoriesData, citiesData] = await Promise.all([
+          eventService.fetchCategories(),
+          eventService.fetchVilles()
         ]);
         
-        setEvents(eventsData);
-        setCities(citiesData);
         setCategories(categoriesData);
-      } catch (error) {
-        console.error('Erreur chargement données:', error);
-        // Utiliser les données mock en cas d'erreur
-        const mockEvents = eventService.getMockEvents();
-        const mockCities = eventService.getMockCities();
-        const mockCategories = eventService.getMockCategories();
+        setCities(citiesData);
         
+        // Charger les événements
+        const eventsData = await eventService.fetchEvents();
+        const transformedEvents = eventService.transformEventData(eventsData);
+        setEvents(transformedEvents);
+        
+      } catch (error) {
+        console.error('Erreur lors du chargement des données:', error);
+        // Utiliser les données de démonstration en cas d'erreur
         setEvents(mockEvents);
-        setCities(mockCities);
-        setCategories(mockCategories);
       } finally {
         setLoading(false);
       }
     };
 
-    loadInitialData();
+    loadData();
   }, []);
 
   // Filtrer les événements
