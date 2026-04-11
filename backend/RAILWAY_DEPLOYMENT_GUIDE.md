@@ -87,9 +87,22 @@ curl https://votre-url.railway.app/api/
 4. Exécutez la commande
 
 ### 2. Créer un Superutilisateur (Optionnel)
-```bash
-python manage.py createsuperuser
-```
+1. Allez dans les **"Variables"** de votre service
+2. Cliquez sur **"New Command"**
+3. Ajoutez la commande: `python manage.py createsuperuser`
+4. Exécutez la commande et suivez les instructions
+
+### 3. Configurer les Watch Paths
+Pour éviter des déploiements inutiles, configurez les Watch Paths pour que seuls les changements dans le dossier `backend` déclenchent un nouveau déploiement :
+
+1. Dans les settings de votre service, allez à la section **"Watch Paths"**
+2. Ajoutez le pattern : `/backend/**`
+3. Cliquez sur le checkmark pour valider
+
+**Pourquoi c'est important :**
+- Évite les déploiements déclenchés par des changements dans d'autres dossiers
+- Réduit l'utilisation des ressources de build
+- Accélère le cycle de développement
 
 ## Étape 4: Configuration du Frontend (si applicable)
 
