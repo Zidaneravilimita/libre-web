@@ -25,12 +25,13 @@ SECRET_KEY = 'django-insecure-45!n8qgn3(uw7)u)3*0g&h#8izt)1xm*3ph&$*#e^epefvq6$l
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', '.onrender.com']
 
 # Configuration CORS
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+    "https://*.onrender.com",
 ]
 
 # Configuration REST Framework
