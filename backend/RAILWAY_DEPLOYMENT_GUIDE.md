@@ -147,12 +147,20 @@ Support de `DATABASE_URL` pour Railway en plus de la configuration Render
 3. **Port binding**: Vérifiez que gunicorn utilise `$PORT` et non un port fixe
 4. **pip: not found**: Railway détecte Node.js au lieu de Python à cause des fichiers package.json
 
-### Erreur "pip: not found" - Solution
-Si Railway détecte Node.js au lieu de Python :
+### Erreur "pip: not found" - Solution Docker
+Si Railway détecte Node.js au lieu de Python ou si pip n'est pas disponible :
 
-1. **Vérifiez les fichiers** : Assurez-vous qu'il n'y a pas de `package.json` à la racine du projet backend
-2. **Configuration nixpacks** : Le fichier `nixpacks.toml` est déjà configuré pour Python
-3. **Forcer Python** : Si le problème persiste, ajoutez un `.railwayignore` pour exclure les fichiers Node.js
+1. **Utilisez Dockerfile** : Le projet est maintenant configuré avec un Dockerfile qui fonctionne avec Railway
+2. **Fichiers créés** :
+   - `Dockerfile` : Configuration Docker pour Python 3.11
+   - `.dockerignore` : Exclut les fichiers inutiles du build
+   - `railway.toml` : Configuré pour utiliser `builder = "DOCKERFILE"`
+
+3. **Avantages du Dockerfile** :
+   - Environnement Python garanti
+   - pip toujours disponible
+   - Isolation complète
+   - Build reproductible
 
 ### Logs Utiles
 - Logs de build: Vérifiez l'installation des dépendances Python

@@ -1,0 +1,37 @@
+# Ignorer tous les fichiers Node.js pour forcer Railway à utiliser Docker
+frontend/
+node_modules/
+package*.json
+package-lock.json
+yarn.lock
+yarn-error.log
+.pnpm-debug.log*
+
+# Ignorer les fichiers de build et cache
+.cache/
+dist/
+build/
+.next/
+.nuxt/
+
+# Ignorer les fichiers de configuration non essentiels
+*.md
+docs/
+.git/
+.gitignore
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Ignorer les fichiers de database
+*.db
+*.sqlite3
+
+# Garder uniquement les fichiers Python essentiels
+!requirements.txt
+!Dockerfile
+!*.py
+!backend/
+!api/
+!events/
