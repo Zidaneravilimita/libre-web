@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Mail, Send, User, MessageSquare } from 'lucide-react';
+import axios from 'axios';
+import { API_ENDPOINTS } from '../config/api';
 import '../styles.css';
 
 const ContactAdmin = () => {
@@ -29,12 +31,21 @@ const ContactAdmin = () => {
 
     setSubmitting(true);
     try {
-      // Simuler l'envoi du message
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      setSubmitted(true);
-      setFormData({ name: '', email: '', subject: '', message: '' });
+      const response = await axios.post(API_ENDPOINTS.CONTACT, {
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        subject: formData.subject.trim() || 'Nouveau message de contact',
+        message: formData.message.trim()
+      });
+      
+      if (response.data.message) {
+        setSubmitted(true);
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      }
     } catch (error) {
-      alert('Une erreur est survenue. Veuillez réessayer.');
+      console.error('Erreur envoi message:', error);
+      const errorMessage = error.response?.data?.error || 'Une erreur est survenue. Veuillez réessayer.';
+      alert(errorMessage);
     } finally {
       setSubmitting(false);
     }

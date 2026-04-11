@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { User, Mail, Lock, Eye, EyeOff, MapPin, ArrowLeft, UserPlus } from 'lucide-react';
 import axios from 'axios';
+import { API_ENDPOINTS } from '../config/api';
 
 const Signup = ({ onSignup, onSwitchToLogin, userType = 'visitor' }) => {
   const [formData, setFormData] = useState({
@@ -24,7 +25,7 @@ const Signup = ({ onSignup, onSwitchToLogin, userType = 'visitor' }) => {
 
   const loadCities = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/api/cities/');
+      const response = await axios.get(API_ENDPOINTS.CITIES);
       setCities(response.data || []);
     } catch (error) {
       console.error('Erreur chargement villes:', error);
@@ -74,7 +75,7 @@ const Signup = ({ onSignup, onSwitchToLogin, userType = 'visitor' }) => {
     
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:8000/api/auth/register/', {
+      const response = await axios.post(API_ENDPOINTS.REGISTER, {
         username: formData.username.trim(),
         email: formData.email.trim(),
         password: formData.password,
@@ -109,8 +110,19 @@ const Signup = ({ onSignup, onSwitchToLogin, userType = 'visitor' }) => {
   const handleSocialSignup = async (provider) => {
     setLoading(true);
     try {
+      // Sauvegarder l'état du formulaire avant la redirection
+      sessionStorage.setItem('oauthFormData', JSON.stringify(formData));
+      sessionStorage.setItem('oauthProvider', provider);
+      sessionStorage.setItem('oauthAction', 'signup');
+      
       // Rediriger vers le backend Django pour l'authentification OAuth
-      window.location.href = `http://localhost:8000/api/auth/${provider}/`;
+      const callbackUrl = encodeURIComponent(`${window.location.origin}/oauth-callback`);
+      const oauthUrl = API_ENDPOINTS[`OAUTH_${provider.toUpperCase()}`];
+      if (oauthUrl) {
+        window.location.href = `${oauthUrl}?callback_url=${callbackUrl}`;
+      } else {
+        throw new Error(`Fournisseur OAuth ${provider} non supporté`);
+      }
     } catch (error) {
       console.error(`Erreur inscription ${provider}:`, error);
       showNotification(`Erreur lors de l'inscription avec ${provider}`, 'error');

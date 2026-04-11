@@ -2,6 +2,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User as DjangoUser
 from backend.models import User, City, Category, Event, EventParticipant, FavoriteEvent
@@ -54,6 +55,11 @@ def register_user(request):
             bio=data.get('bio', '')
         )
         
+        # Génération des tokens JWT
+        refresh = RefreshToken.for_user(user)
+        access_token = str(refresh.access_token)
+        refresh_token = str(refresh)
+        
         return Response({
             'message': 'Inscription réussie',
             'user': {
@@ -62,7 +68,9 @@ def register_user(request):
                 'email': user.email,
                 'role': user.role,
                 'avatar_url': user.avatar_url
-            }
+            },
+            'token': access_token,
+            'refresh': refresh_token
         }, status=status.HTTP_201_CREATED)
         
     except json.JSONDecodeError:
@@ -93,6 +101,12 @@ def login_user(request):
         
         if user is not None:
             login(request, user)
+            
+            # Génération des tokens JWT
+            refresh = RefreshToken.for_user(user)
+            access_token = str(refresh.access_token)
+            refresh_token = str(refresh)
+            
             return Response({
                 'message': 'Connexion réussie',
                 'user': {
@@ -102,7 +116,9 @@ def login_user(request):
                     'role': user.role,
                     'avatar_url': user.avatar_url,
                     'bio': user.bio
-                }
+                },
+                'token': access_token,
+                'refresh': refresh_token
             }, status=status.HTTP_200_OK)
         else:
             return Response({
@@ -128,13 +144,11 @@ def get_cities(request):
         
         for city in cities:
             cities_data.append({
-                'id_ville': city.id_ville,
-                'nom_ville': city.nom_ville
+                'id': city.id_ville,
+                'name': city.nom_ville
             })
         
-        return Response({
-            'cities': cities_data
-        }, status=status.HTTP_200_OK)
+        return Response(cities_data, status=status.HTTP_200_OK)
         
     except Exception as e:
         return Response({

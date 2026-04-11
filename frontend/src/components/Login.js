@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { User, Mail, Lock, Eye, EyeOff, ArrowLeft, UserPlus } from 'lucide-react';
 import axios from 'axios';
+import { API_ENDPOINTS } from '../config/api';
 
 const Login = ({ onLogin, onSwitchToSignup, onSwitchToOrganizer }) => {
   const [email, setEmail] = useState('');
@@ -43,7 +44,7 @@ const Login = ({ onLogin, onSwitchToSignup, onSwitchToOrganizer }) => {
     
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:8000/api/auth/login/', {
+      const response = await axios.post(API_ENDPOINTS.LOGIN, {
         email: email.trim(),
         password: password
       });
@@ -75,8 +76,19 @@ const Login = ({ onLogin, onSwitchToSignup, onSwitchToOrganizer }) => {
   const handleSocialLogin = async (provider) => {
     setLoading(true);
     try {
+      // Sauvegarder l'état du formulaire avant la redirection
+      const formData = { email, password };
+      sessionStorage.setItem('oauthFormData', JSON.stringify(formData));
+      sessionStorage.setItem('oauthProvider', provider);
+      
       // Rediriger vers le backend Django pour l'authentification OAuth
-      window.location.href = `http://localhost:8000/api/auth/${provider}/`;
+      const callbackUrl = encodeURIComponent(`${window.location.origin}/oauth-callback`);
+      const oauthUrl = API_ENDPOINTS[`OAUTH_${provider.toUpperCase()}`];
+      if (oauthUrl) {
+        window.location.href = `${oauthUrl}?callback_url=${callbackUrl}`;
+      } else {
+        throw new Error(`Fournisseur OAuth ${provider} non supporté`);
+      }
     } catch (error) {
       console.error(`Erreur connexion ${provider}:`, error);
       showNotification(`Erreur lors de la connexion avec ${provider}`, 'error');

@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from . import contact_views
 
 urlpatterns = [
     # Authentification
@@ -9,4 +10,7 @@ urlpatterns = [
     # Données de référence
     path('cities/', views.get_cities, name='get_cities'),
     path('categories/', views.get_categories, name='get_categories'),
+    
+    # Contact
+    path('contact/', contact_views.contact_admin, name='contact_admin'),
 ]
