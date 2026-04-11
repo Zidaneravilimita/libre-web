@@ -111,16 +111,49 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'libredb',
-        'USER': 'libre_user',
-        'PASSWORD': '2804',
-        'HOST': 'localhost',
-        'PORT': '5432',
+# Vérifier si nous sommes en environnement de développement ou production
+import os
+is_production = os.getenv('DJANGO_SETTINGS_MODULE') == 'backend.settings.production'
+
+if is_production:
+    # En production, utiliser la configuration du settings production
+    required_db_vars = ['DATABASE_NAME', 'DATABASE_USER', 'DATABASE_PASSWORD', 'DATABASE_HOST']
+    all_vars_present = all(os.getenv(var) for var in required_db_vars)
+    
+    if all_vars_present:
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.postgresql',
+                'NAME': os.getenv('DATABASE_NAME'),
+                'USER': os.getenv('DATABASE_USER'),
+                'PASSWORD': os.getenv('DATABASE_PASSWORD'),
+                'HOST': os.getenv('DATABASE_HOST'),
+                'PORT': os.getenv('DATABASE_PORT', '5432'),
+                'OPTIONS': {
+                    'sslmode': 'require',
+                },
+            }
+        }
+    else:
+        # Fallback SQLite pour le déploiement
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': BASE_DIR / 'temp_db.sqlite3',
+            }
+        }
+else:
+    # Configuration de développement locale
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'libredb',
+            'USER': 'libre_user',
+            'PASSWORD': '2804',
+            'HOST': 'localhost',
+            'PORT': '5432',
+        }
     }
-}
 
 
 AUTH_USER_MODEL = 'backend.User'
