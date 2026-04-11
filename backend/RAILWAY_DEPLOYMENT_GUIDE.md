@@ -145,11 +145,25 @@ Support de `DATABASE_URL` pour Railway en plus de la configuration Render
 1. **ModuleNotFoundError**: Vérifiez que `dj-database-url` est dans requirements.txt
 2. **Connection refused**: Assurez-vous que la base de données est démarrée
 3. **Port binding**: Vérifiez que gunicorn utilise `$PORT` et non un port fixe
+4. **pip: not found**: Railway détecte Node.js au lieu de Python à cause des fichiers package.json
+
+### Erreur "pip: not found" - Solution
+Si Railway détecte Node.js au lieu de Python :
+
+1. **Vérifiez les fichiers** : Assurez-vous qu'il n'y a pas de `package.json` à la racine du projet backend
+2. **Configuration nixpacks** : Le fichier `nixpacks.toml` est déjà configuré pour Python
+3. **Forcer Python** : Si le problème persiste, ajoutez un `.railwayignore` pour exclure les fichiers Node.js
 
 ### Logs Utiles
-- Logs de build: Vérifiez l'installation des dépendances
+- Logs de build: Vérifiez l'installation des dépendances Python
 - Logs de runtime: Vérifiez le démarrage de Django et la connexion DB
 - Logs de database: Vérifiez que PostgreSQL fonctionne correctement
+
+### Problèmes de Détection de Language
+Railway peut détecter le mauvais language si :
+- Il y a des fichiers `package.json` dans le dossier backend
+- Le dossier `node_modules` n'est pas dans `.gitignore`
+- Les fichiers de configuration sont au mauvais endroit
 
 ## Prochaines Étapes
 
