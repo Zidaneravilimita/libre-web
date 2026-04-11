@@ -20,6 +20,18 @@ services:
         value: false
       - key: ALLOWED_HOSTS
         value: .onrender.com
+      - key: DATABASE_NAME
+        value: libredb
+      - key: DATABASE_USER
+        value: libre_user
+      - key: DATABASE_HOST
+        value: eventhub-db
+      - key: DATABASE_PORT
+        value: 5432
+      - fromDatabase:
+          name: eventhub-db
+          property: connectionString
+          key: DATABASE_PASSWORD
         
   # Service PostgreSQL
   - type: pserv
