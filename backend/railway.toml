@@ -1,0 +1,21 @@
+[build]
+builder = "NIXPACKS"
+
+[deploy]
+startCommand = "gunicorn backend.wsgi:application --bind 0.0.0.0:$PORT"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
+
+[[services]]
+name = "eventhub-backend"
+
+[services.variables]
+DJANGO_SETTINGS_MODULE = "backend.settings.production"
+DEBUG = "false"
+ALLOWED_HOSTS = ".railway.app,.onrender.com,localhost,127.0.0.1"
+
+[[services]]
+name = "eventhub-db"
+[services.variables]
+POSTGRES_DB = "libredb"
+POSTGRES_USER = "libre_user"

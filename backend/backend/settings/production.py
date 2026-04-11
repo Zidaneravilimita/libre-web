@@ -104,33 +104,44 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
-# Base de données PostgreSQL sur Render
-# Vérifier si toutes les variables d'environnement sont présentes
-required_db_vars = ['DATABASE_NAME', 'DATABASE_USER', 'DATABASE_PASSWORD', 'DATABASE_HOST']
-all_vars_present = all(config(var, default=None) for var in required_db_vars)
+# Base de données PostgreSQL (Render ou Railway)
+import dj_database_url
 
-if all_vars_present:
+# Vérifier si DATABASE_URL est disponible (Railway)
+database_url = config('DATABASE_URL', default=None)
+
+if database_url:
+    # Configuration Railway via DATABASE_URL
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': config('DATABASE_NAME'),
-            'USER': config('DATABASE_USER'),
-            'PASSWORD': config('DATABASE_PASSWORD'),
-            'HOST': config('DATABASE_HOST'),
-            'PORT': config('DATABASE_PORT', default='5432'),
-            'OPTIONS': {
-                'sslmode': 'require',
-            },
-        }
+        'default': dj_database_url.parse(database_url)
     }
 else:
-    # Fallback pour le démarrage si la base de données n'est pas encore disponible
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'temp_db.sqlite3',
+    # Configuration Render avec variables séparées
+    required_db_vars = ['DATABASE_NAME', 'DATABASE_USER', 'DATABASE_PASSWORD', 'DATABASE_HOST']
+    all_vars_present = all(config(var, default=None) for var in required_db_vars)
+
+    if all_vars_present:
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.postgresql',
+                'NAME': config('DATABASE_NAME'),
+                'USER': config('DATABASE_USER'),
+                'PASSWORD': config('DATABASE_PASSWORD'),
+                'HOST': config('DATABASE_HOST'),
+                'PORT': config('DATABASE_PORT', default='5432'),
+                'OPTIONS': {
+                    'sslmode': 'require',
+                },
+            }
         }
-    }
+    else:
+        # Fallback SQLite pour le démarrage si la base de données n'est pas encore disponible
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': BASE_DIR / 'temp_db.sqlite3',
+            }
+        }
 
 # Modèle utilisateur personnalisé
 AUTH_USER_MODEL = 'backend.User'
