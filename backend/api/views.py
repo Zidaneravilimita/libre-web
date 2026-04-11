@@ -8,6 +8,7 @@ from django.contrib.auth.models import User as DjangoUser
 from backend.models import User, City, Category, Event, EventParticipant, FavoriteEvent
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
+from django.db import connection
 import json
 
 @api_view(['POST'])

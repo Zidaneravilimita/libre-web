@@ -3,6 +3,9 @@ from . import views
 from . import contact_views
 
 urlpatterns = [
+    # Healthcheck
+    path('health/', views.healthcheck, name='healthcheck'),
+    
     # Authentification
     path('auth/register/', views.register_user, name='register_user'),
     path('auth/login/', views.login_user, name='login_user'),

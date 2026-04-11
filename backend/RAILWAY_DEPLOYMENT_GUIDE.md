@@ -52,6 +52,16 @@ CORS_ALLOWED_ORIGINS=https://*.railway.app,https://*.onrender.com,http://localho
 PYTHON_VERSION=3.11
 ```
 
+### 5. Configurer le Healthcheck
+Dans l'interface Railway, configurez le healthcheck pour assurer un déploiement réussi :
+
+1. Allez dans les settings de votre service
+2. Cliquez sur **"+ Healthcheck Path"**
+3. Entrez : `/api/health/`
+4. Railway vérifiera automatiquement que votre application fonctionne avant de la rendre publique
+
+**Note** : Le healthcheck est déjà configuré dans `railway.toml` avec `healthcheckPath = "/api/health/"`
+
 **Note**: Railway fournit automatiquement `DATABASE_URL` pour la connexion à la base de données.
 
 ## Étape 2: Vérifier le Déploiement
