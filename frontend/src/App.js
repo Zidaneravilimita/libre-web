@@ -7,6 +7,7 @@ import AuthPage from './pages/AuthPage';
 import DashboardVisitor from './pages/DashboardVisitor';
 import DashboardOrganizer from './pages/DashboardOrganizer';
 import ReservationPage from './pages/ReservationPage';
+import ContactAdmin from './components/ContactAdmin';
 import './styles.css';
 
 function App() {
@@ -75,6 +76,7 @@ function App() {
             <main>
               <Hero />
               <EventList onReservation={handleReservation} />
+              <ContactAdmin />
             </main>
             <Footer />
           </div>

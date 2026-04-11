@@ -43,15 +43,15 @@ const Footer = () => {
           <div className="contact-info">
             <div className="contact-item">
               <Mail size={16} />
-              <span>contact@eventhub.fr</span>
+              <span>tahiendrazazidane@gmail.com</span>
             </div>
             <div className="contact-item">
               <Phone size={16} />
-              <span>01 23 45 67 89</span>
+              <span>+261 32 68 792 14</span>
             </div>
             <div className="contact-item">
               <MapPin size={16} />
-              <span>Paris, France</span>
+              <span>Mahajanga Madagascar</span>
             </div>
           </div>
         </div>
